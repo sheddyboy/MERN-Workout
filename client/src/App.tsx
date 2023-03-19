@@ -1,9 +1,20 @@
 import React from "react";
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Outlet,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 import Layout from "./components/Layout";
+import { useAuthContext } from "./hooks/useAuthContext";
 import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 function App() {
+  const { state: authState } = useAuthContext();
+  const { user } = authState;
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -15,7 +26,15 @@ function App() {
       children: [
         {
           path: "/",
-          element: <Home />,
+          element: user ? <Home /> : <Navigate to="/login" />,
+        },
+        {
+          path: "/login",
+          element: !user ? <Login /> : <Navigate to="/" />,
+        },
+        {
+          path: "/signup",
+          element: !user ? <Signup /> : <Navigate to="/" />,
         },
       ],
     },

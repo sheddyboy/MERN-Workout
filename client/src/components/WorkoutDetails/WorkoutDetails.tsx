@@ -1,5 +1,6 @@
 import { formatDistanceToNow } from "date-fns";
 import React from "react";
+import { useAuthContext } from "../../hooks/useAuthContext";
 import { useWorkoutsContext } from "../../hooks/useWorkoutContext";
 import { WorkoutsTypes } from "../../pages/Home";
 
@@ -8,14 +9,26 @@ interface WorkoutDetailsTypes {
 }
 
 const WorkoutDetails = ({ workout }: WorkoutDetailsTypes) => {
+  const { state: authState } = useAuthContext();
+  const { user } = authState;
+
   const { dispatch } = useWorkoutsContext();
-  const handleClick = () => {
-    fetch("/api/workouts/" + workout._id, {
+  const handleClick = async () => {
+    if (!user) {
+      return;
+    }
+
+    const response = await fetch("/api/workouts/" + workout._id, {
       method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then((data) => dispatch({ type: "DELETE_WORKOUT", payload: data }))
-      .catch((err) => console.log(err));
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+    const data = await response.json();
+
+    if (response.ok) {
+      dispatch({ type: "DELETE_WORKOUT", payload: data });
+    }
   };
   return (
     <div className="workout-details">

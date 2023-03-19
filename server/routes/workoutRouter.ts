@@ -6,8 +6,12 @@ import {
   getWorkouts,
   updateWorkout,
 } from "../controllers/workoutController";
+import requireAuth from "../middleware/requireAuth";
 
 const router = Router();
+
+// Require authorization for all routes
+router.use(requireAuth);
 
 router.get("/", getWorkouts);
 

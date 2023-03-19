@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import WorkoutDetails from "../components/WorkoutDetails/WorkoutDetails";
 import WorkoutForm from "../components/WorkoutForm/WorkoutForm";
+import { useAuthContext } from "../hooks/useAuthContext";
 import { useWorkoutsContext } from "../hooks/useWorkoutContext";
 
 export interface WorkoutsTypes {
@@ -16,18 +17,21 @@ export interface WorkoutsTypes {
 const Home = () => {
   const { state, dispatch } = useWorkoutsContext();
   const { workouts } = state;
+  const { state: authState } = useAuthContext();
+  const { user } = authState;
   useEffect(() => {
-    fetch("/api/workouts")
-      .then((res) => res.json())
-      .then((data) => {
-        dispatch({
-          type: "SET_WORKOUTS",
-          payload: data,
-        });
-        console.log(data);
-      })
-      .catch((err) => console.log("Error: ", err));
-  }, [dispatch]);
+    const fetchWorkouts = async () => {
+      const response = await fetch("/api/workouts", {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      const data = await response.json();
+
+      response.ok && dispatch({ type: "SET_WORKOUTS", payload: data });
+    };
+    user && fetchWorkouts();
+  }, [dispatch, user]);
 
   return (
     <div className="home">

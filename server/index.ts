@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import workoutRoutes from "./routes/workoutRouter";
 import mongoose from "mongoose";
+import userRoutes from "./routes/userRouter";
 dotenv.config();
 
 const PORT = process.env.PORT;
@@ -14,7 +15,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
+// Routes
 app.use("/api/workouts", workoutRoutes);
+app.use("/api/user", userRoutes);
 
 mongoose
   .connect(MONG_URI!)
