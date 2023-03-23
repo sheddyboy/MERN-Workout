@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { login, signup } from "../controllers/userController";
+import { login, signup, verifyToken } from "../controllers/userController";
 
 const router = Router();
 
@@ -8,5 +8,8 @@ router.post("/login", login);
 
 // Signup
 router.post("/signup", signup);
+
+// Verify token
+router.post("/verify", verifyToken);
 
 export default router;

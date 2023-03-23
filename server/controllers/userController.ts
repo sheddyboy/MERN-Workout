@@ -34,4 +34,22 @@ const signup = async (req: Request, res: Response) => {
   }
 };
 
-export { login, signup };
+const verifyToken = (req: Request, res: Response) => {
+  try {
+    const token = req.body.token;
+    const { _id }: any = jwt.verify(token, process.env.SECRET!);
+    console.log(_id);
+    userModel
+      .findById(_id)
+      .then((user) => {
+        res.status(200).json({ user, token });
+      })
+      .catch((err) => {
+        res.status(400).json(err);
+      });
+  } catch (err) {
+    res.status(400).json(err);
+  }
+};
+
+export { login, signup, verifyToken };

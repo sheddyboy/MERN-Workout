@@ -47,10 +47,23 @@ export const AuthContextProvider = ({ children }: AuthContextProviderTypes) => {
     const user = JSON.parse(localStorage.getItem("user")!);
 
     if (user) {
-      dispatch({ type: "LOGIN", payload: user });
+      fetch(`/api/user/verify`, {
+        method: "POST",
+        body: JSON.stringify(user),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Network response was not okay");
+          return res.json();
+        })
+        .then((user) => {
+          dispatch({ type: "LOGIN", payload: user });
+        })
+        .catch((err) => console.log(err));
     }
   }, []);
-  console.log("AuthContext state: ", state);
   return (
     <AuthContext.Provider value={{ state, dispatch }}>
       {children}
