@@ -30,10 +30,12 @@ export const authReducer = (state: defaultReducerStates, action: any) => {
   switch (action.type) {
     case "LOGIN":
       return {
+        ...state,
         user: action.payload,
       };
     case "LOGOUT":
       return {
+        ...state,
         user: null,
       };
     default:
@@ -42,9 +44,12 @@ export const authReducer = (state: defaultReducerStates, action: any) => {
 };
 
 export const AuthContextProvider = ({ children }: AuthContextProviderTypes) => {
-  const [state, dispatch] = useReducer(authReducer, { user: null });
+  const [state, dispatch] = useReducer(authReducer, {
+    user: null,
+  });
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user")!);
+    let error = false;
 
     if (user) {
       fetch(`/api/user/verify`, {
@@ -55,11 +60,12 @@ export const AuthContextProvider = ({ children }: AuthContextProviderTypes) => {
         },
       })
         .then((res) => {
-          if (!res.ok) throw new Error("Network response was not okay");
+          error = !res.ok;
           return res.json();
         })
-        .then((user) => {
-          dispatch({ type: "LOGIN", payload: user });
+        .then((data) => {
+          if (error) throw new Error(data.message);
+          dispatch({ type: "LOGIN", payload: data });
         })
         .catch((err) => console.log(err));
     }
