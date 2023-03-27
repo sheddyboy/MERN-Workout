@@ -19,7 +19,7 @@ const WorkoutDetails = ({ workout }: WorkoutDetailsTypes) => {
     }
 
     const response = await fetch(
-      `${process.env.BASE_URL}/api/workouts/` + workout._id,
+      `${process.env.REACT_APP_BASE_URL}/api/workouts/` + workout._id,
       {
         method: "DELETE",
         headers: {

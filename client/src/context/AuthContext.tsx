@@ -52,7 +52,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderTypes) => {
     let error = false;
 
     if (user) {
-      fetch(`${process.env.BASE_URL}/api/user/verify`, {
+      fetch(`${process.env.REACT_APP_BASE_URL}/api/user/verify`, {
         method: "POST",
         body: JSON.stringify(user),
         headers: {

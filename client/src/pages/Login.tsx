@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
 
 const Login = () => {
+  console.log(process.env.REACT_APP_BASE_URL);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login, error, isLoading } = useLogin();
