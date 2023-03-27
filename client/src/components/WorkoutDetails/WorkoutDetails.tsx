@@ -18,12 +18,15 @@ const WorkoutDetails = ({ workout }: WorkoutDetailsTypes) => {
       return;
     }
 
-    const response = await fetch("/api/workouts/" + workout._id, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    });
+    const response = await fetch(
+      `${process.env.BASE_URL}/api/workouts/` + workout._id,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
     const data = await response.json();
 
     if (response.ok) {
